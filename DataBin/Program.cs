@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using DataBin.Data;
+using MVCMovie.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DataBinContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DataBinContext") ?? throw new InvalidOperationException("Connection string 'DataBinContext' not found.")));
@@ -10,13 +12,19 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    var services = scope.ServiceProvider;
+    SeedData.Initialize(services);
 }
+
+    // Configure the HTTP request pipeline.
+    if (!app.Environment.IsDevelopment())
+    {
+        app.UseExceptionHandler("/Home/Error");
+        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+        app.UseHsts();
+    }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

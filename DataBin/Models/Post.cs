@@ -11,17 +11,17 @@ namespace DataBin.Models
         public string Title { get; set; }
 
         [StringLength(100)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [Required]
-        [StringLength(500)]
+        [StringLength(1000)]
         public string Content { get; set; }
 
         [Required]
         public int Stars { get; set; } = 0;
 
         [DataType(DataType.Date)]
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
         [DataType(DataType.DateTime)]
         public DateTime LastUpdatedAt { get; set; }

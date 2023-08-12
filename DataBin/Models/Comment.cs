@@ -11,7 +11,7 @@ namespace DataBin.Models
         [DataType(DataType.Date)]
         public DateTime CreatedAt { get; set; }
         [DataType(DataType.DateTime)]
-        public DateTime LastUpdatedAt { get; set; }
+        public DateTime? LastUpdatedAt { get; set; }
         public int PostId { get; set; }
         public Post? Post { get; set; }
     }
