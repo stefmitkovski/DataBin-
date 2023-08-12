@@ -1,4 +1,9 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using DataBin.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<DataBinContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DataBinContext") ?? throw new InvalidOperationException("Connection string 'DataBinContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
