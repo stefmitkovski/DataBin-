@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using DataBin.Data;
+﻿using DataBin.Data;
 using DataBin.Models;
+using DataBin.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataBin.Controllers
 {
@@ -20,11 +16,27 @@ namespace DataBin.Controllers
         }
 
         // GET: Posts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int p = 1)
         {
-              return _context.Post != null ? 
-                          View(await _context.Post.ToListAsync()) :
-                          Problem("Entity set 'DataBinContext.Post'  is null.");
+            int pageSize = 5; // Post per page
+            int totalRecords = await _context.Post.CountAsync(); // Total number of records in the database
+
+            if (p <= 1 || (p - 1) * pageSize >= totalRecords) // Check if there are posts on the next page
+            {
+                p = 1;
+            }
+
+            var posts = await _context.Post
+                .Skip((p - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            ListingPosts viewModel = new ListingPosts
+            {
+                Posts = posts,
+                PageNumber = p + 1
+            };
+            return View(viewModel);
         }
 
         // GET: Posts/Details/5
@@ -150,14 +162,14 @@ namespace DataBin.Controllers
             {
                 _context.Post.Remove(post);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool PostExists(int id)
         {
-          return (_context.Post?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Post?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

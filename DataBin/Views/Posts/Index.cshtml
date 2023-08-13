@@ -1,65 +1,30 @@
-﻿@model IEnumerable<DataBin.Models.Post>
+﻿@model DataBin.ViewModels.ListingPosts
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Posts";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Stars)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastUpdatedAt)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Content)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Stars)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastUpdatedAt)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="my-3 p-3 bg-body rounded shadow-sm">
+    <h6 class="border-bottom pb-2 mb-0">All Posts</h6>
+    @foreach (var item in Model.Posts)
+    {
+        <div class="d-flex text-body-secondary border-bottom">
+            <p class="small lh-sm">
+                <strong class="d-block">
+                    <a asp-area="" asp-controller="Posts" asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
+                </strong>
+                by anonymous @item.TimePassedCreation
+                @if (item.LastUpdatedAt != null)
+                {
+                    <text>last updated + @item.TimePassedUpdated</text>
+                }
+                <br>
+                <a asp-controller="Posts" asp-action="Edit" asp-route-id="@item.Id">edit</a> |
+                <a asp-controller="Posts" asp-action="Delete" asp-route-id="@item.Id">delete</a>
+            </p>
+        </div>
+    }
+    <small class="d-block text-end mt-3">
+        <a asp-action="" asp-controller="Posts" asp-action="Index" asp-route-p="@Model.PageNumber">More</a>
+    </small>
+</div>

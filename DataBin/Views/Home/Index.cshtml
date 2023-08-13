@@ -10,32 +10,18 @@
 
         @foreach(var item in Model.MostStared)
         {
-            <div class="d-flex text-body-secondary pt-3">
-            @*<svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"></rect><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>*@
-            @if(@item.Description != null)
-            {
-                <p class="pb-3 mb-0 small lh-sm border-bottom">
-                <strong class="d-block text-gray-dark">
+        <div class="d-flex text-body-secondary border-bottom">
+                <p class="small lh-sm">
+                <strong class="d-block">
                     <a asp-area="" asp-controller="Posts" asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
                 </strong>
-                @item.Description
+                    by anonymous @item.TimePassedCreation
+                    @if (item.LastUpdatedAt != null)
+                    {
+                    <text>last updated + @item.TimePassedUpdated</text>
+                    }
                 </p>
-            }else{
-                <p class="pb-3 mb-0 small lh-sm border-bottom">
-                    <strong class="d-block text-gray-dark">@item.Title</strong>
-                    No decription found
-                </p>
-            }
             </div>
-        <p class="small lh-sm">
-            Created @item.TimePassedCreation
-        </p>
-        @if (item.LastUpdatedAt != null)
-        {
-            <p class="small lh-sm">
-                Created @item.TimePassedUpdated
-            </p>
-        }
         }
     <small class="d-block text-end mt-3">
         <a asp-action="" asp-controller="Posts" asp-action="Index">All posts</a>
@@ -44,41 +30,22 @@
 
 <div class="my-3 p-3 bg-body rounded shadow-sm">
     <h6 class="border-bottom pb-2 mb-0">Most recent posts</h6>
-    @foreach(var item in Model.MostRecent)
+    @foreach (var item in Model.MostRecent)
     {
-    <div class="d-flex text-body-secondary pt-3">
-            @*<svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"></rect><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>*@
-            @if (@item.Description != null)
-            {
-                <p class="pb-3 mb-0 small lh-sm border-bottom">
-                    <strong class="d-block text-gray-dark">
-                        <a asp-area="" asp-controller="Posts" asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
-                    </strong>
-                    @item.Description
-                </p>
-            }
-            else
-            {
-                <p class="pb-3 mb-0 small lh-sm border-bottom">
-                    <strong class="d-block text-gray-dark">
-                        <a asp-area="" asp-controller="Posts" asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
-                    </strong>
-                    No decription found
-                </p>
-            }
-    </div>
-        <p class="small lh-sm">
-            Created @item.TimePassedCreation
-        </p>
-        @if(item.LastUpdatedAt != null)
-        {
+        <div class="d-flex text-body-secondary border-bottom">
             <p class="small lh-sm">
-                Updated @item.TimePassedUpdated
+                <strong class="d-block">
+                    <a asp-area="" asp-controller="Posts" asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
+                </strong>
+                by anonymous @item.TimePassedCreation
+                @if (item.LastUpdatedAt != null)
+                {
+                    <text>last updated + @item.TimePassedUpdated</text>
+                }
             </p>
-        }
+        </div>
     }
-    
     <small class="d-block text-end mt-3">
-        <a asp-area="" asp-controller="Posts" asp-action="Index">All posts</a>
+        <a asp-action="" asp-controller="Posts" asp-action="Index">All posts</a>
     </small>
 </div>
