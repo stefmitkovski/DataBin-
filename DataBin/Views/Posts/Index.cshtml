@@ -11,7 +11,7 @@
         <div class="d-flex text-body-secondary border-bottom">
             <p class="small lh-sm">
                 <strong class="d-block">
-                    <a asp-area="" asp-controller="Posts" asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
+                    <a asp-controller="Posts" asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
                 </strong>
                 by anonymous @item.TimePassedCreation
                 @if (item.LastUpdatedAt != null)
@@ -24,7 +24,10 @@
             </p>
         </div>
     }
+    @if (Model.Flag)
+    {
     <small class="d-block text-end mt-3">
-        <a asp-action="" asp-controller="Posts" asp-action="Index" asp-route-p="@Model.PageNumber">More</a>
+        <a asp-controller="Posts" asp-action="Index" asp-route-p="@Model.PageNumber">More</a>
     </small>
+    }
 </div>

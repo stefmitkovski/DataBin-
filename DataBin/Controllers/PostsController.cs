@@ -2,6 +2,7 @@
 using DataBin.Models;
 using DataBin.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataBin.Controllers
@@ -20,10 +21,16 @@ namespace DataBin.Controllers
         {
             int pageSize = 5; // Post per page
             int totalRecords = await _context.Post.CountAsync(); // Total number of records in the database
+            Boolean flag = true;
 
-            if (p <= 1 || (p - 1) * pageSize >= totalRecords) // Check if there are posts on the next page
+            if (p < 1 || (p - 1) * pageSize >= totalRecords) // Check if there are posts on the next page
             {
-                p = 1;
+                return NotFound();
+            }
+
+            if (p * pageSize >= totalRecords)
+            {
+                flag = false;
             }
 
             var posts = await _context.Post
@@ -34,7 +41,8 @@ namespace DataBin.Controllers
             ListingPosts viewModel = new ListingPosts
             {
                 Posts = posts,
-                PageNumber = p + 1
+                PageNumber = p + 1,
+                Flag = flag,
             };
             return View(viewModel);
         }
