@@ -1,5 +1,8 @@
-﻿using DataBin.Models;
+﻿using DataBin.Data;
+using DataBin.Models;
+using DataBin.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace DataBin.Controllers
@@ -7,15 +10,37 @@ namespace DataBin.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly DataBinContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, DataBinContext context)
         {
             _logger = logger;
+            _context = context; 
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var popular = _context.Post.OrderByDescending(p => p.Stars).Take(3);
+
+            if (popular == null)
+            {
+                return NotFound();
+            }
+
+            var recent = _context.Post.OrderByDescending(r => r.CreatedAt).Take(3);
+
+            if (recent == null)
+            {
+                return NotFound();
+            }
+
+            HomePagePosts viewModel = new HomePagePosts
+            {
+                MostStared = await popular.ToListAsync(),
+                MostRecent = await recent.ToListAsync()
+            };
+
+            return View(viewModel);
         }
 
         public IActionResult Privacy()
