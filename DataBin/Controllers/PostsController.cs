@@ -17,35 +17,36 @@ namespace DataBin.Controllers
         }
 
         // GET: Posts
-        public async Task<IActionResult> Index(int p = 1)
+        public async Task<IActionResult> Index(string searchString, string PostTopic)
         {
-            int pageSize = 5; // Post per page
-            int totalRecords = await _context.Post.CountAsync(); // Total number of records in the database
-            Boolean flag = true;
+            IQueryable<PostTopic> query = _context.PostTopic.AsQueryable();
+            IQueryable<string> postTopicQuery = _context.Topic.Distinct().Select(s => s.Name);
 
-            if (p < 1 || (p - 1) * pageSize >= totalRecords) // Check if there are posts on the next page
+            // Apply search filter if searchString is provided
+            if (!string.IsNullOrEmpty(searchString))
             {
-                return NotFound();
+                query = query.Where(p => p.Post.Title.Contains(searchString));
             }
 
-            if (p * pageSize >= totalRecords)
+            // Apply search filter if searchString is provided
+            if (!string.IsNullOrEmpty(PostTopic))
             {
-                flag = false;
+                query = query.Where(p => p.Topic.Name == PostTopic);
             }
 
-            var posts = await _context.Post
-                .Skip((p - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            // Load related data (Post and Topic)
+            query = query.Include(p => p.Post).Include(p => p.Topic);
 
+            // Create ViewModel
             ListingPosts viewModel = new ListingPosts
             {
-                Posts = posts,
-                PageNumber = p + 1,
-                Flag = flag,
+                Posts = await query.Select(p => p.Post).Distinct().ToListAsync(),
+                Topics = new SelectList(await postTopicQuery.ToListAsync())
             };
+
             return View(viewModel);
         }
+
 
         // GET: Posts/Details/5
         public async Task<IActionResult> Details(int? id)

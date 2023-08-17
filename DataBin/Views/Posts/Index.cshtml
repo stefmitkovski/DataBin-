@@ -4,6 +4,21 @@
     ViewData["Title"] = "Posts";
 }
 
+<div class="container my-3">
+    <form asp-controller="Posts" asp-action="Index" method="get">
+        <div class="row ">
+            <div class="col">
+                <input type="text" class="form-control" asp-for="SearchString" placeholder="Search">
+            </div>
+            <div class="col">
+                <select asp-for="PostTopic" asp-items="Model.Topics" class="form-select">
+                    <option value="">All</option>
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+
 <div class="my-3 p-3 bg-body rounded shadow-sm">
     <h6 class="border-bottom pb-2 mb-0">All Posts</h6>
     @foreach (var item in Model.Posts)
@@ -23,11 +38,5 @@
                 <a asp-controller="Posts" asp-action="Delete" asp-route-id="@item.Id">delete</a>
             </p>
         </div>
-    }
-    @if (Model.Flag)
-    {
-    <small class="d-block text-end mt-3">
-        <a asp-controller="Posts" asp-action="Index" asp-route-p="@Model.PageNumber">More</a>
-    </small>
     }
 </div>

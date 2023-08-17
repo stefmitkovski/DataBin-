@@ -48,7 +48,7 @@ namespace DataBin.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comment", (string)null);
                 });
 
             modelBuilder.Entity("DataBin.Models.Post", b =>
@@ -84,7 +84,7 @@ namespace DataBin.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Post");
+                    b.ToTable("Post", (string)null);
                 });
 
             modelBuilder.Entity("DataBin.Models.PostTopic", b =>
@@ -107,7 +107,7 @@ namespace DataBin.Migrations
 
                     b.HasIndex("TopicId");
 
-                    b.ToTable("PostTopic");
+                    b.ToTable("PostTopic", (string)null);
                 });
 
             modelBuilder.Entity("DataBin.Models.Topic", b =>
@@ -124,7 +124,7 @@ namespace DataBin.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Topic");
+                    b.ToTable("Topic", (string)null);
                 });
 
             modelBuilder.Entity("DataBin.Models.Comment", b =>

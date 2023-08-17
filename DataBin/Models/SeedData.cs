@@ -136,7 +136,6 @@ namespace MVCMovie.Models
                 context.SaveChanges();
 
                 context.PostTopic.AddRange(
-                    new PostTopic { PostId = 0, TopicId = 0 },
                     new PostTopic { PostId = 1, TopicId = 1 },
                     new PostTopic { PostId = 2, TopicId = 2 },
                     new PostTopic { PostId = 3, TopicId = 3 },
@@ -146,8 +145,9 @@ namespace MVCMovie.Models
                     new PostTopic { PostId = 7, TopicId = 7 },
                     new PostTopic { PostId = 8, TopicId = 8 },
                     new PostTopic { PostId = 9, TopicId = 9 },
-                    new PostTopic { PostId = 10, TopicId = 0 },
-                    new PostTopic { PostId = 11, TopicId = 1 }
+                    new PostTopic { PostId = 10, TopicId = 10 },
+                    new PostTopic { PostId = 11, TopicId = 1 },
+                    new PostTopic { PostId = 12, TopicId = 2 }
                 );
 
                 context.SaveChanges();
