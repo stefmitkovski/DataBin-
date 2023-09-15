@@ -16,6 +16,8 @@ namespace DataBin.Data
 
         public DbSet<DataBin.Models.Post> Post { get; set; } = default!;
 
+        public DbSet<DataBin.Models.Language> Language { get; set; }
+
         public DbSet<DataBin.Models.Comment>? Comment { get; set; }
 
         public DbSet<DataBin.Models.Topic>? Topic { get; set; }
@@ -25,6 +27,11 @@ namespace DataBin.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Post>()
+                .HasOne<Language>(p => p.Language)
+                .WithMany(p => p.Posts)
+                .HasForeignKey(p => p.LanguageId);
 
             builder.Entity<PostTopic>()
                 .HasOne<Post>(p => p.Post)

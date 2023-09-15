@@ -17,31 +17,36 @@ namespace DataBin.Controllers
         }
 
         // GET: Posts
-        public async Task<IActionResult> Index(string searchString, string PostTopic)
+        public async Task<IActionResult> Index(string searchString, string PostTopic, string Language)
         {
-            IQueryable<PostTopic> query = _context.PostTopic.AsQueryable();
-            IQueryable<string> postTopicQuery = _context.Topic.Distinct().Select(s => s.Name);
+            IQueryable<PostTopic> topicQuery = _context.PostTopic.AsQueryable();
+            IQueryable<string> StringTopicQuery = _context.Topic.Distinct().Select(s => s.Name);
+            IQueryable<string> StringLanguageQuery = _context.Language.Distinct().Select(s => s.Name);
 
-            // Apply search filter if searchString is provided
             if (!string.IsNullOrEmpty(searchString))
             {
-                query = query.Where(p => p.Post.Title.Contains(searchString));
+                topicQuery = topicQuery.Where(p => p.Post.Title.Contains(searchString));
             }
 
-            // Apply search filter if searchString is provided
+            if (!string.IsNullOrEmpty(Language))
+            {
+                topicQuery = topicQuery.Where(p => p.Post.Language.Name.Equals(Language));
+            }
+
             if (!string.IsNullOrEmpty(PostTopic))
             {
-                query = query.Where(p => p.Topic.Name == PostTopic);
+                topicQuery = topicQuery.Where(p => p.Topic.Name == PostTopic);
             }
 
             // Load related data (Post and Topic)
-            query = query.Include(p => p.Post).Include(p => p.Topic);
+            topicQuery = topicQuery.Include(p => p.Post).Include(p => p.Topic);
 
             // Create ViewModel
             ListingPosts viewModel = new ListingPosts
             {
-                Posts = await query.Select(p => p.Post).Distinct().ToListAsync(),
-                Topics = new SelectList(await postTopicQuery.ToListAsync())
+                Posts = await topicQuery.Select(p => p.Post).Distinct().ToListAsync(),
+                Topics = new SelectList(await StringTopicQuery.ToListAsync()),
+                Languages = new SelectList(await StringLanguageQuery.ToListAsync())
             };
 
             return View(viewModel);

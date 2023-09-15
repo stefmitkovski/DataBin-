@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataBin.Models
@@ -7,8 +8,7 @@ namespace DataBin.Models
     {
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(60, MinimumLength = 10)]
+        [StringLength(50)]
         public string Title { get; set; }
 
         [StringLength(100)]
@@ -17,6 +17,10 @@ namespace DataBin.Models
         [Required]
         [StringLength(1000)]
         public string Content { get; set; }
+
+        [Display(Name = "Language")]
+        public int LanguageId { get; set; }
+        public Language? Language { get; set; }
 
         [Required]
         public int Stars { get; set; } = 0;
@@ -27,7 +31,8 @@ namespace DataBin.Models
         [NotMapped]
         public string TimePassedCreation
         {
-            get {
+            get
+            {
 
                 if (this.CreatedAt == null)
                 {

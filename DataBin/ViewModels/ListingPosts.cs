@@ -7,7 +7,9 @@ namespace DataBin.ViewModels
     {
         public IList<Post> Posts { get; set; }
         public SelectList Topics { get; set; }
+        public SelectList Languages { get; set; }
         public string PostTopic { get; set; }
+        public string Language { get; set; }
         public string SearchString { get; set; }
     }
 }
