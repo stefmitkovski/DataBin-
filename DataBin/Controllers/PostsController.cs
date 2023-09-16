@@ -91,30 +91,33 @@ namespace DataBin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PostCRUDViewModel viewModel)
         {
-            viewModel.Post.Stars = 0;
-            viewModel.Post.LanguageId = viewModel.Language;
-            viewModel.Post.CreatedAt = DateTime.Now;
-            //if (ModelState.IsValid)
-            //{
-            _context.Add(viewModel.Post);
-            await _context.SaveChangesAsync();
-            if (viewModel.SelectedTopics != null)
+            if (ModelState.IsValid)
             {
-                foreach (int topicId in viewModel.SelectedTopics)
+                viewModel.Post.Stars = 0;
+                viewModel.Post.LanguageId = viewModel.Language;
+                viewModel.Post.CreatedAt = DateTime.Now;
+                _context.Add(viewModel.Post);
+                await _context.SaveChangesAsync();
+                if (viewModel.SelectedTopics != null)
                 {
-                    _context.PostTopic.Add(new PostTopic { PostId = viewModel.Post.Id, TopicId = topicId });
+                    foreach (int topicId in viewModel.SelectedTopics)
+                    {
+                        _context.PostTopic.Add(new PostTopic { PostId = viewModel.Post.Id, TopicId = topicId });
+                    }
+                }
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            foreach (var key in ModelState.Keys)
+            {
+                var modelStateEntry = ModelState[key];
+                foreach (var error in modelStateEntry.Errors)
+                {
+                    TempData["feedback"] = ($"Key: {key}, Error: {error.ErrorMessage}" + "\n");
                 }
             }
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-            //}
-            //var errors = ModelState.Values.SelectMany(v => v.Errors);
-            //foreach (var error in errors)
-            //{
-            //    TempData["feedback"] += error + "\n";
-            //}
-            ////TempData["feedback"] = viewModel.Language;
-            //return RedirectToAction(nameof(Create));
+            //TempData["feedback"] = viewModel.Language;
+            return RedirectToAction(nameof(Create));
         }
 
         // GET: Posts/Edit/5
@@ -130,7 +133,17 @@ namespace DataBin.Controllers
             {
                 return NotFound();
             }
-            return View(post);
+
+            PostCRUDViewModel viewModel = new PostCRUDViewModel()
+            {
+                Post = post,
+                Language = post.LanguageId,
+                Languages = new SelectList(_context.Language.AsEnumerable(), "Id", "Name"),
+                TopicList = new MultiSelectList(_context.Topic.AsEnumerable().OrderBy(s => s.Name), "Id", "Name"),
+                SelectedTopics = _context.PostTopic.Where(s => s.PostId == id).Select(s => s.TopicId)
+            };
+
+            return View(viewModel);
         }
 
         // POST: Posts/Edit/5
@@ -138,9 +151,9 @@ namespace DataBin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Content,Stars,CreatedAt,LastUpdatedAt")] Post post)
+        public async Task<IActionResult> Edit(int id, PostCRUDViewModel viewModel)
         {
-            if (id != post.Id)
+            if (id != viewModel.Post.Id)
             {
                 return NotFound();
             }
@@ -149,12 +162,31 @@ namespace DataBin.Controllers
             {
                 try
                 {
-                    _context.Update(post);
+                    viewModel.Post.LastUpdatedAt = DateTime.Now;
+                    viewModel.Post.LanguageId = viewModel.Language;
+                    _context.Update(viewModel.Post);
+                    await _context.SaveChangesAsync();
+
+                    IEnumerable<int> newTopicList = viewModel.SelectedTopics;
+                    IEnumerable<int> prevTopicList = _context.PostTopic.Where(s => s.PostId == id).Select(s => s.TopicId);
+                    IQueryable<PostTopic> toBeRemoved = _context.PostTopic.Where(s => s.PostId == id);
+                    if (newTopicList != null)
+                    {
+                        toBeRemoved = toBeRemoved.Where(s => !newTopicList.Contains(s.TopicId));
+                        foreach (int topicId in newTopicList)
+                        {
+                            if (!prevTopicList.Any(s => s == topicId))
+                            {
+                                _context.PostTopic.Add(new PostTopic { TopicId = topicId, PostId = id });
+                            }
+                        }
+                    }
+                    _context.PostTopic.RemoveRange(toBeRemoved);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PostExists(post.Id))
+                    if (!PostExists(viewModel.Post.Id))
                     {
                         return NotFound();
                     }
@@ -165,7 +197,7 @@ namespace DataBin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(post);
+            return View(viewModel);
         }
 
         // GET: Posts/Delete/5

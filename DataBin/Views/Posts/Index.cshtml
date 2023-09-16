@@ -36,7 +36,7 @@
                 by anonymous @item.TimePassedCreation
                 @if (item.LastUpdatedAt != null)
                 {
-                    <text>last updated + @item.TimePassedUpdated</text>
+                    <text>last updated: @item.TimePassedUpdated</text>
                 }
                 <br>
                 <a asp-controller="Posts" asp-action="Edit" asp-route-id="@item.Id">edit</a> |

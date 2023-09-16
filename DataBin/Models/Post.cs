@@ -32,7 +32,6 @@ namespace DataBin.Models
         {
             get
             {
-
                 if (this.CreatedAt == null)
                 {
                     return "No created time available";
