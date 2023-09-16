@@ -4,7 +4,6 @@ namespace DataBin.Models
 {
     public class PostTopic
     {
-        [Key]
         public int Id { get; set; }
         [Required]
         public int PostId { get; set; }

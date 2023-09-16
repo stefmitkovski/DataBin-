@@ -22,8 +22,7 @@ namespace DataBin.Models
         public int LanguageId { get; set; }
         public Language? Language { get; set; }
 
-        [Required]
-        public int Stars { get; set; } = 0;
+        public int? Stars { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime CreatedAt { get; set; }

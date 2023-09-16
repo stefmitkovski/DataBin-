@@ -74,7 +74,14 @@ namespace DataBin.Controllers
         // GET: Posts/Create
         public IActionResult Create()
         {
-            return View();
+            PostCRUDViewModel viewModel = new PostCRUDViewModel()
+            {
+                Post = new Post(),
+                Languages = new SelectList(_context.Language.AsEnumerable(), "Id", "Name"),
+                TopicList = new MultiSelectList(_context.Topic.AsEnumerable(), "Id", "Name"),
+                SelectedTopics = Enumerable.Empty<int>()
+            };
+            return View(viewModel);
         }
 
         // POST: Posts/Create
@@ -82,15 +89,32 @@ namespace DataBin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Content,Stars,CreatedAt,LastUpdatedAt")] Post post)
+        public async Task<IActionResult> Create(PostCRUDViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            viewModel.Post.Stars = 0;
+            viewModel.Post.LanguageId = viewModel.Language;
+            viewModel.Post.CreatedAt = DateTime.Now;
+            //if (ModelState.IsValid)
+            //{
+            _context.Add(viewModel.Post);
+            await _context.SaveChangesAsync();
+            if (viewModel.SelectedTopics != null)
             {
-                _context.Add(post);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                foreach (int topicId in viewModel.SelectedTopics)
+                {
+                    _context.PostTopic.Add(new PostTopic { PostId = viewModel.Post.Id, TopicId = topicId });
+                }
             }
-            return View(post);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+            //}
+            //var errors = ModelState.Values.SelectMany(v => v.Errors);
+            //foreach (var error in errors)
+            //{
+            //    TempData["feedback"] += error + "\n";
+            //}
+            ////TempData["feedback"] = viewModel.Language;
+            //return RedirectToAction(nameof(Create));
         }
 
         // GET: Posts/Edit/5

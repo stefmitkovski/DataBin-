@@ -4,6 +4,7 @@ using DataBin.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataBin.Migrations
 {
     [DbContext(typeof(DataBinContext))]
-    partial class DataBinContextModelSnapshot : ModelSnapshot
+    [Migration("20230916125108_RemovedKeyAnnotation")]
+    partial class RemovedKeyAnnotation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,11 +96,10 @@ namespace DataBin.Migrations
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("Stars")
+                    b.Property<int>("Stars")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
