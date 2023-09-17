@@ -18,11 +18,6 @@
                 <span asp-validation-for="Post.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Post.Description" class="control-label"></label>
-                <input asp-for="Post.Description" class="form-control" />
-                <span asp-validation-for="Post.Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Post.Content" class="control-label"></label>
                 <textarea asp-for="Post.Content" class="form-control"></textarea>
                 <span asp-validation-for="Post.Content" class="text-danger"></span>
@@ -39,6 +34,7 @@
                 <span asp-validation-for="SelectedTopics" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="Post.CreatedAt" class="form-control"/>
+            <input type="hidden" asp-for="Post.Stars" class="form-control" />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary my-3" />
             </div>

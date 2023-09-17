@@ -25,10 +25,10 @@ namespace MVCMovie.Models
                     new Language { /*Id = 4, */Name = "Python" },
                     new Language { /*Id = 5, */Name = "Java" },
                     new Language { /*Id = 6, */Name = "JavaScript" },
-                    new Language { /*Id = 7, */Name = "JSON" },
-                    new Language { /*Id = 8, */Name = "TypeScript" },
-                    new Language { /*Id = 9, */Name = "Perl" },
-                    new Language { /*Id = 10, */Name = "None" }
+                    new Language { /*Id = 7, */Name = "Rust" },
+                    new Language { /*Id = 8, */Name = "Perl" },
+                    new Language { /*Id = 9, */Name = "Lua" },
+                    new Language { /*Id = 10, */Name = "GO" }
                 );
 
                 context.SaveChanges();
@@ -36,9 +36,8 @@ namespace MVCMovie.Models
                 context.Post.AddRange(
                     new Post
                     { /*Id = 1, */
-                        Title = "Lorem ipsum dolor sit amet",
-                        Description = "Ea rerum voluptatem sit dolorem enim nam.",
-                        Content = "Sed eius deserunt 33 harum dolorem sed autem quae aut odio atque sit fuga nemo qui beatae dolor. Id consequatur iste ut sequi suscipit non tempora iure in assumenda error? Qui corporis dolor est dolor odio aut natus Quis sed inventore iure et quam internos! Aut eius esse 33 ipsam aliquid hic magni officiis.",
+                        Title = "Intro into C programing",
+                        Content = "#include <stdio.h>\r\n\r\nint main() {\r\n    printf(\"Hello, World!\\n\");\r\n    return 0;\r\n}\r\n",
                         Stars = 30,
                         LanguageId = 1,
                         CreatedAt = DateTime.Now
@@ -46,9 +45,8 @@ namespace MVCMovie.Models
 
                     new Post
                     { /*Id = 2, */
-                        Title = "Et sint recusandae",
-                        Description = " Qui sint eveniet sed numquam dolores eum minima expedita.",
-                        Content = "Ut illo esse est dolorem doloribus non excepturi corporis ex deserunt molestias aut praesentium omnis. Et autem nihil et dolores soluta rem galisum sequi in voluptates suscipit est atque galisum. ",
+                        Title = "Basic C++ program",
+                        Content = "#include <iostream>\r\n\r\nint main() {\r\n    std::cout << \"Hello, World!\" << std::endl;\r\n    return 0;\r\n}\r\n",
                         Stars = 40,
                         LanguageId = 2,
                         CreatedAt = DateTime.Now
@@ -56,9 +54,8 @@ namespace MVCMovie.Models
 
                     new Post
                     { /*Id = 3, */
-                        Title = "At assumenda enim",
-                        Description = "Aut molestiae quis est libero illo et doloribus illum non laborum.",
-                        Content = "Aut ducimus impedit sed nostrum cupiditate est earum iste eum numquam odio et rerum pariatur. Eos impedit asperiores aut voluptatem voluptatem et quis distinctio sed veniam voluptatem non quod alias qui quaerat cumque ut perferendis consequatur. ",
+                        Title = "Be sharp in C#",
+                        Content = "using System;\r\n\r\nclass Program {\r\n    static void Main() {\r\n        Console.WriteLine(\"Hello, World!\");\r\n    }\r\n}\r\n",
                         Stars = 25,
                         LanguageId = 3,
                         CreatedAt = DateTime.Now
@@ -66,9 +63,8 @@ namespace MVCMovie.Models
 
                     new Post
                     { /*Id = 4, */
-                        Title = "Quis maxime aut alias nulla est galisum quos",
-                        Description = "Ut galisum nobis in saepe dolorem 33 eius.",
-                        Content = "Aut fugit quos 33 nulla omnis ut soluta quaerat vel possimus molestiae qui necessitatibus tempora. Aut laudantium natus non itaque Quis sed temporibus quia ut quasi excepturi aut totam molestiae?",
+                        Title = "Python for noobs",
+                        Content = "print(\"Hello, World!\")\r\n",
                         Stars = 55,
                         LanguageId = 4,
                         CreatedAt = DateTime.Now
@@ -76,71 +72,64 @@ namespace MVCMovie.Models
 
                     new Post
                     { /*Id = 5, */
-                        Title = "Ea illum deserunt id repudiandae ",
-                        Content = "Est quas iure 33 consectetur eaque ab autem cupiditate sit modi quod et reprehenderit laudantium ex reprehenderit laboriosam et temporibus tempore? Aut quidem enim nam labore illum non esse galisum. ",
+                        Title = "Your first Java program",
+                        Content = "public class HelloWorld {\r\n    public static void main(String[] args) {\r\n        System.out.println(\"Hello, World!\");\r\n    }\r\n}\r\n",
                         Stars = 10,
                         LanguageId = 5,
                         CreatedAt = DateTime.Now
                     },
                     new Post
                     { /*Id = 6, */
-                        Title = "Quo dolores porro qui sapiente dolores",
-                        Description = "Sit autem ipsa eos dicta odio cum internos laboriosam qui quos placeat eos reiciendis vitae.",
-                        Content = "Ab molestias doloremque aut deleniti voluptatum eos dolor eligendi sed illum earum et exercitationem sapiente rem accusamus unde ut accusantium expedita. ",
+                        Title = "Learn web programing with Javascript",
+                        Content = "console.log(\"Hello, World!\");\r\n",
                         Stars = 45,
                         LanguageId = 6,
                         CreatedAt = DateTime.Now
                     },
                     new Post
                     { /*Id = 7, */
-                        Title = "Ut repudiandae repellat ",
-                        Description = "Sit eligendi delectus ut error tempore sed repudiandae voluptate",
-                        Content = "Qui soluta quidem ut dolore quod est eligendi alias vel labore deserunt quo quidem nesciunt. Est alias mollitia qui amet sint et sunt galisum sed tempora aliquid.",
+                        Title = "Rust in Action",
+                        Content = "fn main() {\r\n    println!(\"Hello, World!\");\r\n}\r\n",
                         Stars = 80,
                         LanguageId = 7,
                         CreatedAt = DateTime.Now
                     },
                     new Post
                     { /*Id = 8, */
-                        Title = "Et accusamus quia vel tempora rerum",
-                        Description = "At galisum placeat qui provident aliquam hic sunt illo. In velit cumque ea harum quam.",
-                        Content = "Ut consequatur praesentium non commodi dolor et totam dolore sit eius vero sed aliquam eaque quo autem obcaecati. ",
+                        Title = "Learn the basics in Perl",
+                        Content = "print(\"Hello, World!\\n\");\r\n",
                         Stars = 70,
                         LanguageId = 8,
                         CreatedAt = DateTime.Now
                     },
                     new Post
                     { /*Id = 9, */
-                        Title = "Aut iure provident vel sequi",
-                        Description = "Qui totam rerum aut adipisci alias qui ipsum natus ab iste consequatur aut soluta omnis",
-                        Content = "Non nemo tempore At autem numquam id dicta iusto id rerum tempora ut quos soluta et quod molestiae ut accusamus incidunt",
+                        Title = "Game development in Lua",
+                        Content = "print(\"Hello, World!\")\r\n",
                         Stars = 20,
                         LanguageId = 9,
                         CreatedAt = DateTime.Now
                     },
                     new Post
                     { /*Id = 10, */
-                        Title = "In quia voluptatem aut ",
-                        Description = "Non nostrum itaque et tempora rerum qui asperiores beatae",
-                        Content = "Ut deserunt excepturi aut voluptatem delectus est exercitationem reprehenderit et deserunt quis eum dolores ducimus.",
+                        Title = "Golang programming",
+                        Content = "package main\r\n\r\nimport \"fmt\"\r\n\r\nfunc main() {\r\n    fmt.Println(\"Hello, World!\")\r\n}\r\n",
                         Stars = 18,
                         LanguageId = 10,
                         CreatedAt = DateTime.Now
                     },
                     new Post
                     { /*Id = 11, */
-                        Title = "Ea id repudiandae ",
-                        Description = "At itaque perferendis et cumque iste.",
-                        Content = "Non autem unde qui eligendi deleniti ut quia dolorem id optio ducimus. Aut culpa rerum et dolores voluptatem et ullam laborum At modi esse. ",
+                        Title = "Advanced C",
+                        Content = "#include <stdio.h>\r\n\r\nint main() {\r\n    int num1 = 10;\r\n    int num2 = 20;\r\n    int sum = num1 + num2;\r\n    \r\n    printf(\"The sum of %d and %d is %d\\n\", num1, num2, sum);\r\n    \r\n    return 0;\r\n}\r\n",
                         Stars = 44,
                         LanguageId = 1,
                         CreatedAt = DateTime.Now
                     },
                     new Post
                     { /*Id = 12, */
-                        Title = "Vel quisquam consequatur nam laboriosam ",
-                        Description = "Et doloribus iure eum deleniti consectetur et excepturi voluptas et facere consequatur.",
-                        Content = "Est rerum aliquid qui maiores sunt est doloribus perferendis ea molestiae modi sit quam velit ut quidem galisum. ",
+                        Title = "Advanced C++",
+                        Content = "#include <iostream>\r\n\r\nint main() {\r\n    int num1 = 10;\r\n    int num2 = 20;\r\n    int sum = num1 + num2;\r\n    \r\n    std::cout << \"The sum of \" << num1 << \" and \" << num2 << \" is \" << sum << std::endl;\r\n    \r\n    return 0;\r\n}\r\n",
                         Stars = 36,
                         LanguageId = 2,
                         CreatedAt = DateTime.Now

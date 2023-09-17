@@ -164,6 +164,10 @@ namespace DataBin.Controllers
                 {
                     viewModel.Post.LastUpdatedAt = DateTime.Now;
                     viewModel.Post.LanguageId = viewModel.Language;
+                    if(viewModel.Post.Title == null)
+                    {
+                        viewModel.Post.Title = "Untitled";
+                    }
                     _context.Update(viewModel.Post);
                     await _context.SaveChangesAsync();
 
@@ -214,6 +218,7 @@ namespace DataBin.Controllers
             {
                 return NotFound();
             }
+
 
             return View(post);
         }
