@@ -19,19 +19,13 @@
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+                <input type="hidden" asp-for="CreatedAt" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="LastUpdatedAt" class="control-label"></label>
-                <input asp-for="LastUpdatedAt" class="form-control" />
-                <span asp-validation-for="LastUpdatedAt" class="text-danger"></span>
+                <input type="hidden" asp-for="LastUpdatedAt" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="PostId" class="control-label"></label>
-                <select asp-for="PostId" class="form-control" asp-items="ViewBag.PostId"></select>
-                <span asp-validation-for="PostId" class="text-danger"></span>
+                <input type="hidden" asp-for="PostId" class="form-control" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

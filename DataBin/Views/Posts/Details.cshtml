@@ -1,33 +1,54 @@
-﻿@model DataBin.Models.Post
+﻿@using Microsoft.AspNetCore.Http.Extensions;
+@model DataBin.ViewModels.PostCommentSection
 
 @{
     ViewData["Title"] = "Details";
+    var currentUrl = Context.Request.GetDisplayUrl(); // Get the current URL
 }
 
-<h1 class="py-3">@Model.Title</h1>
-<p>@Model.Stars stars by anonymous @Model.TimePassedCreation @if (Model.LastUpdatedAt != null)
+<h1 class="py-3">@Model.Post.Title</h1>
+<p>@Model.Post.Stars stars by anonymous @Model.Post.TimePassedCreation @if (Model.Post.LastUpdatedAt != null)
     {
-        <text>updated: </text> @Model.TimePassedUpdated
+        <text>updated: </text> @Model.Post.TimePassedUpdated
     }</p>
 <div>
     <hr />
-    <pre><code>@Model.Content</code></pre>
+    <pre><code>@Model.Post.Content</code></pre>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model?.Post.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
     <hr />
-    <form asp-controller="Comments" asp-action="Create">
+    <form asp-controller="Comments" asp-action="Create" method="post">
         <div class="form-group">
-            <textarea rows="8" cols="100"
-            @* asp-for="Post.Content" *@ 
-                class="form-control"></textarea>
-            <span 
-                @* asp-validation-for="Post.Content" *@ 
-                class="text-danger"></span>
+            <input type="hidden" asp-for="Comment.PostId" value="@Model.Post.Id" />
+        </div>
+        <div class="form-group">
+            <textarea rows="8" cols="100" asp-for="Comment.Content" class="form-control"></textarea>
+            <span asp-validation-for="Comment.Content" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="hidden" asp-for="Comment.CreatedAt" />
+        </div>
+        <div class="form-group">
+            <input type="hidden" asp-for="Comment.Post" />
         </div>
         <div class="form-group">
             <input type="submit" value="Post" class="btn btn-primary my-3" />
         </div>
     </form>
+    <div class="py-2">
+        @foreach(var item in @Model.CommentSection)
+        {
+            <p>
+                anonymous @item.TimePassedCreation @if (Model.Post.LastUpdatedAt != null)
+                {
+                    <text>updated: </text> @Model.Post.TimePassedUpdated
+                }
+            </p>
+            <p>@item.Content</p>
+            <a asp-controller="Comments" asp-action="Edit" asp-route-id="@item.Id">edit</a><text> |</text>
+            <a asp-controller="Comments" asp-action="Delete" asp-route-id="@item.Id">delete</a>
+        }
+    </div>
 </div>

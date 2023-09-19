@@ -68,7 +68,15 @@ namespace DataBin.Controllers
                 return NotFound();
             }
 
-            return View(post);
+            var comments = await _context.Comment.Where(c => c.PostId == id).ToListAsync();
+            PostCommentSection viewModel = new PostCommentSection()
+            {
+                Post = post,
+                Comment = new Comment(),
+                CommentSection = comments
+            };
+
+            return View(viewModel);
         }
 
         // GET: Posts/Create

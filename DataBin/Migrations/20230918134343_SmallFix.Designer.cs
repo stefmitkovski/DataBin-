@@ -4,6 +4,7 @@ using DataBin.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataBin.Migrations
 {
     [DbContext(typeof(DataBinContext))]
-    partial class DataBinContextModelSnapshot : ModelSnapshot
+    [Migration("20230918134343_SmallFix")]
+    partial class SmallFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,7 +55,7 @@ namespace DataBin.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Comment", (string)null);
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("DataBin.Models.Language", b =>
@@ -70,7 +72,7 @@ namespace DataBin.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Language", (string)null);
+                    b.ToTable("Language");
                 });
 
             modelBuilder.Entity("DataBin.Models.Post", b =>
@@ -106,7 +108,7 @@ namespace DataBin.Migrations
 
                     b.HasIndex("LanguageId");
 
-                    b.ToTable("Post", (string)null);
+                    b.ToTable("Post");
                 });
 
             modelBuilder.Entity("DataBin.Models.PostTopic", b =>
@@ -129,7 +131,7 @@ namespace DataBin.Migrations
 
                     b.HasIndex("TopicId");
 
-                    b.ToTable("PostTopic", (string)null);
+                    b.ToTable("PostTopic");
                 });
 
             modelBuilder.Entity("DataBin.Models.Topic", b =>
@@ -146,7 +148,7 @@ namespace DataBin.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Topic", (string)null);
+                    b.ToTable("Topic");
                 });
 
             modelBuilder.Entity("DataBin.Models.Comment", b =>
