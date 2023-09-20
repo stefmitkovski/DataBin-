@@ -20,14 +20,14 @@ namespace DataBin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var popular = _context.Post.OrderByDescending(p => p.Stars).Take(3);
+            var popular = _context.Post.OrderByDescending(p => p.Stars).Take(5);
 
             if (popular == null)
             {
                 return NotFound();
             }
 
-            var recent = _context.Post.OrderByDescending(r => r.CreatedAt).Take(3);
+            var recent = _context.Post.OrderByDescending(r => r.CreatedAt).Take(5);
 
             if (recent == null)
             {

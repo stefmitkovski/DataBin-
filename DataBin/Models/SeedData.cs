@@ -1,17 +1,48 @@
-﻿using DataBin.Data;
+﻿using DataBin.Areas.Identity.Data;
+using DataBin.Data;
 using DataBin.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Policy;
 
 namespace MVCMovie.Models
 {
     public class SeedData
     {
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static async Task CreateUserRoles(IServiceProvider serviceProvider)
+        {
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var UserManager = serviceProvider.GetRequiredService<UserManager<DataBinUser>>();
+            IdentityResult roleResult;
+            //Add Admin Role
+            var roleAdminCheck = await RoleManager.RoleExistsAsync("Admin");
+            if (!roleAdminCheck) { roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin")); }
+            //Add User Role
+            var roleUserCheck = await RoleManager.RoleExistsAsync("User");
+            if (!roleUserCheck) { roleResult = await RoleManager.CreateAsync(new IdentityRole("User")); }
+
+            DataBinUser user = await UserManager.FindByEmailAsync("admin@databin.com");
+            if (user == null)
+            {
+                var User = new DataBinUser();
+                User.Email = "admin@databin.com";
+                User.UserName = "admin@databin.com";
+                string userPWD = "!Admin123";
+                IdentityResult chkUser = await UserManager.CreateAsync(User, userPWD);
+                //Add default User to Role Admin      
+                if (chkUser.Succeeded) { var result1 = await UserManager.AddToRoleAsync(User, "Admin"); } else
+                {
+                    throw new Exception("User creation failed: " + string.Join(", ", chkUser.Errors.Select(e => e.Description)));
+                }
+            }
+        }
+            public static void Initialize(IServiceProvider serviceProvider)
         {
             using (var context = new DataBinContext(
                 serviceProvider.GetRequiredService<
                     DbContextOptions<DataBinContext>>()))
             {
+                CreateUserRoles(serviceProvider).Wait();
                 // Look for any movies.
                 if (context.Post.Any() || context.Comment.Any() || context.Topic.Any() || context.Language.Any())
                 {

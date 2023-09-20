@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using DataBin.Models;
+using DataBin.Areas.Identity.Data;
 
 namespace DataBin.Data
 {
-    public class DataBinContext : DbContext
+    public class DataBinContext : IdentityDbContext<DataBinUser>
     {
         public DataBinContext (DbContextOptions<DataBinContext> options)
             : base(options)
