@@ -15,10 +15,18 @@
                 <strong class="d-block">
                     <a asp-area="" asp-controller="Posts" asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
                 </strong>
-                    by anonymous @item.TimePassedCreation
+                by @item.Poster @item.TimePassedCreation
                     @if (item.LastUpdatedAt != null)
                     {
                     <text>last updated: @item.TimePassedUpdated</text>
+                    }
+                    <br>
+                    @if (item.Poster == User.Identity.Name)
+                    {
+                        <text>
+                            <a asp-controller="Posts" asp-action="Edit" asp-route-id="@item.Id">edit</a> |
+                            <a asp-controller="Posts" asp-action="Delete" asp-route-id="@item.Id">delete</a>
+                        </text>
                     }
                 </p>
             </div>
@@ -37,10 +45,18 @@
                 <strong class="d-block">
                     <a asp-area="" asp-controller="Posts" asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
                 </strong>
-                by anonymous @item.TimePassedCreation
+                by @item.Poster @item.TimePassedCreation
                 @if (item.LastUpdatedAt != null)
                 {
                     <text>last updated: @item.TimePassedUpdated</text>
+                }
+                <br>
+                @if (item.Poster == User.Identity.Name)
+                {
+                    <text>
+                        <a asp-controller="Posts" asp-action="Edit" asp-route-id="@item.Id">edit</a> |
+                        <a asp-controller="Posts" asp-action="Delete" asp-route-id="@item.Id">delete</a>
+                    </text>
                 }
             </p>
         </div>

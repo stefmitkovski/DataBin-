@@ -88,6 +88,7 @@ namespace DataBin.Models
             }
         }
 
+        public string? Poster { get; set; }
         public ICollection<Comment>? Comments { get; set; }
         public ICollection<PostTopic>? PostTopics { get; set; }
     }

@@ -1,6 +1,7 @@
 ﻿using DataBin.Data;
 using DataBin.Models;
 using DataBin.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -104,6 +105,14 @@ namespace DataBin.Controllers
                 viewModel.Post.Stars = 0;
                 viewModel.Post.LanguageId = viewModel.Language;
                 viewModel.Post.CreatedAt = DateTime.Now;
+                if (string.IsNullOrWhiteSpace(viewModel.Post.Poster))
+                {
+                    viewModel.Post.Poster = "anonymous";
+                }
+                if (string.IsNullOrWhiteSpace(viewModel.Post.Title))
+                {
+                    viewModel.Post.Title = "Untitled";
+                }
                 _context.Add(viewModel.Post);
                 await _context.SaveChangesAsync();
                 if (viewModel.SelectedTopics != null)
@@ -124,11 +133,11 @@ namespace DataBin.Controllers
                     TempData["feedback"] = ($"Key: {key}, Error: {error.ErrorMessage}" + "\n");
                 }
             }
-            //TempData["feedback"] = viewModel.Language;
             return RedirectToAction(nameof(Create));
         }
 
         // GET: Posts/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Post == null)
@@ -137,6 +146,10 @@ namespace DataBin.Controllers
             }
 
             var post = await _context.Post.FindAsync(id);
+            if (post.Poster != User.Identity.Name)
+            {
+                return RedirectToAction(nameof(Index));
+            }
             if (post == null)
             {
                 return NotFound();
@@ -159,11 +172,16 @@ namespace DataBin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, PostCRUDViewModel viewModel)
         {
             if (id != viewModel.Post.Id)
             {
                 return NotFound();
+            }
+            if (viewModel.Post.Poster != User.Identity.Name)
+            {
+                return RedirectToAction(nameof(Index));
             }
 
             if (ModelState.IsValid)
@@ -172,7 +190,7 @@ namespace DataBin.Controllers
                 {
                     viewModel.Post.LastUpdatedAt = DateTime.Now;
                     viewModel.Post.LanguageId = viewModel.Language;
-                    if(viewModel.Post.Title == null)
+                    if(string.IsNullOrWhiteSpace(viewModel.Post.Title))
                     {
                         viewModel.Post.Title = "Untitled";
                     }
@@ -213,6 +231,7 @@ namespace DataBin.Controllers
         }
 
         // GET: Posts/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Post == null)
@@ -222,6 +241,10 @@ namespace DataBin.Controllers
 
             var post = await _context.Post
                 .FirstOrDefaultAsync(m => m.Id == id);
+            if (post.Poster != User.Identity.Name)
+            {
+                return RedirectToAction(nameof(Index));
+            }
             if (post == null)
             {
                 return NotFound();
@@ -232,6 +255,7 @@ namespace DataBin.Controllers
         }
 
         // POST: Posts/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -241,6 +265,10 @@ namespace DataBin.Controllers
                 return Problem("Entity set 'DataBinContext.Post'  is null.");
             }
             var post = await _context.Post.FindAsync(id);
+            if(post.Poster != User.Identity.Name)
+            {
+                return RedirectToAction(nameof(Index));
+            }
             if (post != null)
             {
                 _context.Post.Remove(post);
@@ -248,6 +276,19 @@ namespace DataBin.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Posts/MyPosts
+        [Authorize]
+        public async Task<IActionResult> MyPosts()
+        {
+            var posts = await _context.Post.Where(p => p.Poster == User.Identity.Name).ToListAsync();
+            if (posts == null)
+            {
+                return View(null);
+            }
+
+            return View(posts);
         }
 
         private bool PostExists(int id)

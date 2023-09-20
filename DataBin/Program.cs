@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using DataBin.Data;
 using MVCMovie.Models;
 using Microsoft.AspNetCore.Identity;
