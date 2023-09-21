@@ -191,7 +191,7 @@ namespace DataBin.Controllers
                 {
                     viewModel.Post.LastUpdatedAt = DateTime.Now;
                     viewModel.Post.LanguageId = viewModel.Language;
-                    if(string.IsNullOrWhiteSpace(viewModel.Post.Title))
+                    if (string.IsNullOrWhiteSpace(viewModel.Post.Title))
                     {
                         viewModel.Post.Title = "Untitled";
                     }
@@ -266,7 +266,7 @@ namespace DataBin.Controllers
                 return Problem("Entity set 'DataBinContext.Post'  is null.");
             }
             var post = await _context.Post.FindAsync(id);
-            if(post.Poster != User.Identity.Name)
+            if (post.Poster != User.Identity.Name)
             {
                 return RedirectToAction(nameof(Index));
             }
@@ -277,6 +277,33 @@ namespace DataBin.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Posts/MyPosts
+        [Authorize]
+        public async Task<IActionResult> MyPosts()
+        {
+            var posts = await _context.Post.Where(p => p.Poster == User.Identity.Name).ToListAsync();
+
+            return View(posts);
+        }
+
+        // GET: Posts/Favorites
+        [Authorize]
+        public async Task<IActionResult> Favorites()
+        {
+            var posts = await _context.Post
+                .Where(p => p.Stars
+                .Any(s => s.User == User.Identity.Name))
+                .ToListAsync();
+            if (posts == null)
+            {
+                return null;
+            }
+            else
+            {
+                return View(posts);
+            }
         }
 
         private bool PostExists(int id)

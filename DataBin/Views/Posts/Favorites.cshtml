@@ -1,0 +1,35 @@
+﻿@model IEnumerable<DataBin.Models.Post>
+
+@{
+    ViewData["Title"] = "Your Favorite Posts";
+}
+
+<div class="my-3 p-3 bg-body rounded shadow-sm">
+    <h6 class="border-bottom pb-2 mb-0">Your Posts</h6>
+
+    @foreach (var item in Model)
+    {
+        <div class="d-flex text-body-secondary border-bottom">
+            <p class="small lh-sm">
+                <strong class="d-block">
+                    <a asp-area="" asp-controller="Posts" asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
+                </strong>
+                by @item.Poster @item.TimePassedCreation
+                @if (item.LastUpdatedAt != null)
+                {
+                    <text>last updated: @item.TimePassedUpdated</text>
+                }
+                @if(item.Poster == User.Identity.Name)
+                {
+                <text>
+                    <a asp-controller="Posts" asp-action="Edit" asp-route-id="@item.Id">edit</a> |
+                    <a asp-controller="Posts" asp-action="Delete" asp-route-id="@item.Id">delete</a>
+                </text>
+                }
+            </p>
+        </div>
+    }
+    <small class="d-block text-end mt-3">
+        <a asp-controller="Posts" asp-action="Index">All posts</a>
+    </small>
+</div>
