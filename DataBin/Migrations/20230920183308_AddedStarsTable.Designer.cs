@@ -4,6 +4,7 @@ using DataBin.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataBin.Migrations
 {
     [DbContext(typeof(DataBinContext))]
-    partial class DataBinContextModelSnapshot : ModelSnapshot
+    [Migration("20230920183308_AddedStarsTable")]
+    partial class AddedStarsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -192,7 +194,7 @@ namespace DataBin.Migrations
                     b.ToTable("PostTopic");
                 });
 
-            modelBuilder.Entity("DataBin.Models.Star", b =>
+            modelBuilder.Entity("DataBin.Models.Stars", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -211,7 +213,7 @@ namespace DataBin.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Star");
+                    b.ToTable("Stars");
                 });
 
             modelBuilder.Entity("DataBin.Models.Topic", b =>
@@ -409,7 +411,7 @@ namespace DataBin.Migrations
                     b.Navigation("Topic");
                 });
 
-            modelBuilder.Entity("DataBin.Models.Star", b =>
+            modelBuilder.Entity("DataBin.Models.Stars", b =>
                 {
                     b.HasOne("DataBin.Models.Post", "Post")
                         .WithMany("Stars")

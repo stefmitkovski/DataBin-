@@ -17,9 +17,6 @@ namespace DataBin.Models
         [Display(Name = "Language")]
         public int LanguageId { get; set; }
         public Language? Language { get; set; }
-
-        public int? Stars { get; set; }
-
         [DataType(DataType.Date)]
         public DateTime CreatedAt { get; set; }
 
@@ -91,5 +88,6 @@ namespace DataBin.Models
         public string? Poster { get; set; }
         public ICollection<Comment>? Comments { get; set; }
         public ICollection<PostTopic>? PostTopics { get; set; }
+        public ICollection<Star>? Stars { get; set; }
     }
 }

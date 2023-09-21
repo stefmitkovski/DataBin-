@@ -70,9 +70,11 @@ namespace DataBin.Controllers
             }
 
             var comments = await _context.Comment.Where(c => c.PostId == id).ToListAsync();
+            var star = await _context.Star.Where(s => s.PostId == id).FirstOrDefaultAsync();
             PostCommentSection viewModel = new PostCommentSection()
             {
                 Post = post,
+                Star = star,
                 Comment = new Comment(),
                 CommentSection = comments
             };
@@ -102,7 +104,6 @@ namespace DataBin.Controllers
         {
             if (ModelState.IsValid)
             {
-                viewModel.Post.Stars = 0;
                 viewModel.Post.LanguageId = viewModel.Language;
                 viewModel.Post.CreatedAt = DateTime.Now;
                 if (string.IsNullOrWhiteSpace(viewModel.Post.Poster))
@@ -276,19 +277,6 @@ namespace DataBin.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        // GET: Posts/MyPosts
-        [Authorize]
-        public async Task<IActionResult> MyPosts()
-        {
-            var posts = await _context.Post.Where(p => p.Poster == User.Identity.Name).ToListAsync();
-            if (posts == null)
-            {
-                return View(null);
-            }
-
-            return View(posts);
         }
 
         private bool PostExists(int id)
