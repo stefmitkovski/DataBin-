@@ -80,6 +80,9 @@ else
             <input type="hidden" asp-for="Comment.Post" />
         </div>
         <div class="form-group">
+            <input type="hidden" asp-for="Comment.Poster" value="@User.Identity.Name"/>
+        </div>
+        <div class="form-group">
             <input type="submit" value="Post" class="btn btn-primary my-3" />
         </div>
     </form>
@@ -87,14 +90,17 @@ else
         @foreach(var item in @Model.CommentSection)
         {
             <p>
-                anonymous @item.TimePassedCreation @if (Model.Post.LastUpdatedAt != null)
+                @item.Poster @item.TimePassedCreation @if (Model.Post.LastUpdatedAt != null)
                 {
                     <text>updated: </text> @Model.Post.TimePassedUpdated
                 }
             </p>
             <p>@item.Content</p>
-            <a asp-controller="Comments" asp-action="Edit" asp-route-id="@item.Id">edit</a><text> |</text>
-            <a asp-controller="Comments" asp-action="Delete" asp-route-id="@item.Id">delete</a>
+            @if(item.Poster == User.Identity.Name)
+            {
+                <a asp-controller="Comments" asp-action="Edit" asp-route-id="@item.Id">edit</a><text> |</text>
+                <a asp-controller="Comments" asp-action="Delete" asp-route-id="@item.Id">delete</a>
+            }
         }
     </div>
 </div>

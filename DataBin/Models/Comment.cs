@@ -9,6 +9,7 @@ namespace DataBin.Models
         [Required]
         [StringLength(100, MinimumLength = 10)]
         public string Content { get; set; }
+        public string Poster { get; set; }
         [DataType(DataType.Date)]
         public DateTime CreatedAt { get; set; }
         [DataType(DataType.DateTime)]

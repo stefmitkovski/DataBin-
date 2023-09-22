@@ -1,8 +1,8 @@
 ﻿using DataBin.Data;
 using DataBin.Models;
 using DataBin.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataBin.Controllers
@@ -21,17 +21,16 @@ namespace DataBin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create(PostCommentSection viewModel)
         {
             viewModel.Comment.CreatedAt = DateTime.Now;
-            string currentUrl = Request.Form["CurrentUrl"];
             if (ModelState.IsValid)
             {
                 _context.Add(viewModel.Comment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Posts", new { id = viewModel.Comment.PostId });
             }
-            //ViewData["PostId"] = new SelectList(_context.Post, "Id", "Content", comment.PostId);
             foreach (var key in ModelState.Keys)
             {
                 var modelStateEntry = ModelState[key];
@@ -44,6 +43,7 @@ namespace DataBin.Controllers
         }
 
         // GET: Comments/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Comment == null)
@@ -56,7 +56,11 @@ namespace DataBin.Controllers
             {
                 return NotFound();
             }
-            //ViewData["PostId"] = new SelectList(_context.Post, "Id", "Content", comment.PostId);
+            var verify = _context.Comment.Where(c => c.Id == id && c.Poster == User.Identity.Name).FirstOrDefaultAsync();
+            if (verify == null)
+            {
+                return RedirectToAction("Details", "Posts", new { id = comment.PostId });
+            }
             return View(comment);
         }
 
@@ -65,6 +69,7 @@ namespace DataBin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Content,CreatedAt,LastUpdatedAt,PostId")] Comment comment)
         {
             if (id != comment.Id)
@@ -76,6 +81,11 @@ namespace DataBin.Controllers
             {
                 try
                 {
+                    var verify = _context.Comment.Where(c => c.Id == id && c.Poster == User.Identity.Name).FirstOrDefaultAsync();
+                    if (verify == null)
+                    {
+                        return RedirectToAction("Details", "Posts", new { id = comment.PostId });
+                    }
                     _context.Update(comment);
                     await _context.SaveChangesAsync();
                 }
@@ -97,6 +107,7 @@ namespace DataBin.Controllers
         }
 
         // GET: Comments/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Comment == null)
@@ -111,6 +122,11 @@ namespace DataBin.Controllers
             {
                 return NotFound();
             }
+            var verify = _context.Comment.Where(c => c.Id == id && c.Poster == User.Identity.Name).FirstOrDefaultAsync();
+            if (verify == null)
+            {
+                return RedirectToAction("Details", "Posts", new { id = comment.PostId });
+            }
 
             return View(comment);
         }
@@ -118,11 +134,17 @@ namespace DataBin.Controllers
         // POST: Comments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Comment == null)
             {
                 return Problem("Entity set 'DataBinContext.Comment'  is null.");
+            }
+            var verify = _context.Comment.Where(c => c.Id == id && c.Poster == User.Identity.Name).FirstOrDefaultAsync();
+            if (verify == null)
+            {
+                return RedirectToAction("Details", "Posts", new { id = id });
             }
             var comment = await _context.Comment.FindAsync(id);
             if (comment != null)
