@@ -70,11 +70,12 @@ namespace DataBin.Controllers
             }
 
             var comments = await _context.Comment.Where(c => c.PostId == id).ToListAsync();
-            var star = await _context.Star.Where(s => s.PostId == id).FirstOrDefaultAsync();
+            var star = await _context.Star.Where(s => s.PostId == id).ToListAsync();
             PostCommentSection viewModel = new PostCommentSection()
             {
                 Post = post,
-                Star = star,
+                Stars = star,
+                Star = new Star(),
                 Comment = new Comment(),
                 CommentSection = comments
             };

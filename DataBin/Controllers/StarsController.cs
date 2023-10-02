@@ -24,26 +24,53 @@ namespace DataBin.Controllers
             if (ModelState.IsValid)
             {
                 // Query for the existing star with the same PostId and User
-                var posts = await _context.Star.Where(s => s.User == viewModel.Star.User).FirstOrDefaultAsync();
+                var posts = await _context.Star
+                    .Where(
+                    s => s.User == viewModel.Star.User
+                    &&
+                    s.PostId == viewModel.Star.PostId
+                    )
+                    .FirstOrDefaultAsync();
 
-                if (posts == null)
-                {
-                    _context.Add(viewModel.Star);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction("Details", "Posts", new { id = viewModel.Star.PostId });
-                }
-                else
-                {
-                    // Ensure that the Id property is set
-                    int post_id = viewModel.Star.PostId;
-                    _context.Star.Remove(posts);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction("Details", "Posts", new { id = post_id });
-                }
+                //if (posts == null)
+                //{
+                _context.Add(viewModel.Star);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Details", "Posts", new { id = viewModel.Star.PostId });
+                //}
+
+                //return RedirectToAction("Details", "Posts", new { id = viewModel.Star.PostId });
             }
 
-            return RedirectToAction("Details", "Posts", new { id = viewModel.Star.PostId });
+            return NotFound();
         }
 
+        [Authorize]
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(PostCommentSection viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                // Query for the existing star with the same PostId and User
+                var posts = await _context.Star
+                    .Where(
+                    s => s.User == viewModel.Star.User
+                    &&
+                    s.PostId == viewModel.Star.PostId
+                    )
+                    .FirstOrDefaultAsync();
+
+
+                // Ensure that the Id property is set
+                int post_id = viewModel.Star.PostId;
+                _context.Star.Remove(posts);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Details", "Posts", new { id = post_id });
+
+            }
+
+            return NotFound();
+        }
     }
 }

@@ -6,6 +6,7 @@ namespace DataBin.ViewModels
     {
         public Post? Post { get; set; }
         public Star? Star { get; set; }
+        public IList<Star>? Stars { get; set; }
         public Comment? Comment { get; set; }
         public IList<Comment>? CommentSection { get; set;}
     }
