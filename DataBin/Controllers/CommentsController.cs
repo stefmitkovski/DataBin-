@@ -70,24 +70,30 @@ namespace DataBin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Content,CreatedAt,LastUpdatedAt,PostId")] Comment comment)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Content,Poster,CreatedAt,LastUpdatedAt,PostId")] Comment comment)
         {
             if (id != comment.Id)
             {
                 return NotFound();
             }
+
             comment.LastUpdatedAt = DateTime.Now;
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var verify = _context.Comment.Where(c => c.Id == id && c.Poster == User.Identity.Name).FirstOrDefaultAsync();
+                    var verify = await _context.Comment
+                        .AsNoTracking()
+                        .Where(c => c.Id == id && c.Poster == User.Identity.Name)
+                        .FirstOrDefaultAsync();
+
                     if (verify == null)
                     {
                         return RedirectToAction("Details", "Posts", new { id = comment.PostId });
                     }
+
                     _context.Update(comment);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync(); // Ensure proper await here
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -102,7 +108,15 @@ namespace DataBin.Controllers
                 }
                 return RedirectToAction("Details", "Posts", new { id = comment.PostId });
             }
-            //ViewData["PostId"] = new SelectList(_context.Post, "Id", "Content", comment.PostId);
+
+            foreach (var key in ModelState.Keys)
+            {
+                var modelStateEntry = ModelState[key];
+                foreach (var error in modelStateEntry.Errors)
+                {
+                    TempData["feedback"] = ($"Key: {key}, Error: {error.ErrorMessage}" + "\n");
+                }
+            }
             return RedirectToAction("Details", "Posts", new { id = comment.PostId });
         }
 
@@ -141,20 +155,28 @@ namespace DataBin.Controllers
             {
                 return Problem("Entity set 'DataBinContext.Comment'  is null.");
             }
-            var verify = _context.Comment.Where(c => c.Id == id && c.Poster == User.Identity.Name).FirstOrDefaultAsync();
+
+            var verify = await _context.Comment
+                .Where(c => c.Id == id && c.Poster == User.Identity.Name)
+                .FirstOrDefaultAsync();
+
             if (verify == null)
             {
                 return RedirectToAction("Details", "Posts", new { id = id });
             }
+
             var comment = await _context.Comment.FindAsync(id);
+
             if (comment != null)
             {
                 _context.Comment.Remove(comment);
+                await _context.SaveChangesAsync(); // Ensure proper await here
+                return RedirectToAction("Details", "Posts", new { id = comment.PostId });
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Details", "Posts", new { id = comment.PostId });
+            return RedirectToAction("Details", "Posts", new { id = id });
         }
+
 
         private bool CommentExists(int id)
         {

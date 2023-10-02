@@ -3,10 +3,16 @@
 
 @{
     ViewData["Title"] = "Details";
-    // var currentUrl = Context.Request.GetDisplayUrl(); // Get the current URL
 }
 
-<h1 class="py-3">@Model.Post.Title</h1>
+@if (TempData["feedback"] != null)
+{
+    <div>@Html.Raw(TempData["feedback"])</div>
+}
+else
+{
+    <h1 class="py-3">@Model.Post.Title</h1>
+}
 @if(Model.Post.Stars != null)
 {
 <p>@Model.Post.Stars.Count stars by anonymous @Model.Post.TimePassedCreation @if (Model.Post.LastUpdatedAt != null)
@@ -80,19 +86,22 @@ else
             <input type="hidden" asp-for="Comment.Post" />
         </div>
         <div class="form-group">
+            <input type="hidden" asp-for="Comment.PostId" value="@Model.Post.Id"/>
+        </div>
+        <div class="form-group">
             <input type="hidden" asp-for="Comment.Poster" value="@User.Identity.Name"/>
         </div>
         <div class="form-group">
             <input type="submit" value="Post" class="btn btn-primary my-3" />
         </div>
     </form>
-    <div class="py-2">
         @foreach(var item in @Model.CommentSection)
         {
+        <div class="py-4">
             <p>
-                @item.Poster @item.TimePassedCreation @if (Model.Post.LastUpdatedAt != null)
+                @item.Poster @item.TimePassedCreation @if (@item.LastUpdatedAt != null)
                 {
-                    <text>updated: </text> @Model.Post.TimePassedUpdated
+                    <text>updated: </text> @item.TimePassedUpdated
                 }
             </p>
             <p>@item.Content</p>
@@ -101,6 +110,6 @@ else
                 <a asp-controller="Comments" asp-action="Edit" asp-route-id="@item.Id">edit</a><text> |</text>
                 <a asp-controller="Comments" asp-action="Delete" asp-route-id="@item.Id">delete</a>
             }
+        </div>
         }
-    </div>
 </div>

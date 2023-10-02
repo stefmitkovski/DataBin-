@@ -19,17 +19,18 @@
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <input type="hidden" asp-for="Poster" class="form-control" value="@User.Identity.Name"/>
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="PostId" class="form-control"/>
+            </div>
+            <div class="form-group">
                 <input type="hidden" asp-for="CreatedAt" class="form-control" />
-            </div>
-            <div class="form-group">
-                <input type="hidden" asp-for="LastUpdatedAt" class="form-control" />
-            </div>
-            <div class="form-group">
-                <input type="hidden" asp-for="PostId" class="form-control" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
+
         </form>
     </div>
 </div>
